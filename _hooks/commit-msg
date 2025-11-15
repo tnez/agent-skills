@@ -1,18 +1,42 @@
 #!/usr/bin/env bash
 #
 # commit-msg hook
-# Strips AI/agent attribution from commit messages using Claude Code in non-interactive mode
+# 1. Validates commit message format (blank line between subject and body)
+# 2. Strips AI/agent attribution from commit messages using Claude Code in non-interactive mode
 #
-# This hook ensures commit messages don't contain:
-# - Claude Code signatures
-# - Co-Authored-By: Claude
-# - AI-generated emojis/attributions
+# This hook ensures commit messages:
+# - Have a blank line between subject (line 1) and body (line 3+) if body exists
+# - Don't contain Claude Code signatures
+# - Don't contain Co-Authored-By: Claude
+# - Don't contain AI-generated emojis/attributions
 #
 
 set -e
 
 COMMIT_MSG_FILE="$1"
 ORIGINAL_MSG=$(cat "$COMMIT_MSG_FILE")
+
+# Validate commit message format
+# If there's more than one line, line 2 must be blank
+LINE_COUNT=$(echo "$ORIGINAL_MSG" | wc -l | tr -d ' ')
+if [ "$LINE_COUNT" -gt 1 ]; then
+    SECOND_LINE=$(echo "$ORIGINAL_MSG" | sed -n '2p')
+    if [ -n "$SECOND_LINE" ]; then
+        echo "Error: Commit message format invalid"
+        echo "The second line must be blank (separating subject from body)"
+        echo ""
+        echo "Current message:"
+        echo "---"
+        echo "$ORIGINAL_MSG"
+        echo "---"
+        echo ""
+        echo "Expected format:"
+        echo "  Line 1: Subject (summary)"
+        echo "  Line 2: <blank line>"
+        echo "  Line 3+: Body (detailed description)"
+        exit 1
+    fi
+fi
 
 # Create prompt for Claude Code to clean the commit message
 PROMPT="Remove any AI or agent attribution from this git commit message. Specifically remove:
