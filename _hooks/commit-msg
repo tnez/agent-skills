@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+#
+# commit-msg hook
+# Strips AI/agent attribution from commit messages using Claude Code in non-interactive mode
+#
+# This hook ensures commit messages don't contain:
+# - Claude Code signatures
+# - Co-Authored-By: Claude
+# - AI-generated emojis/attributions
+#
+
+set -e
+
+COMMIT_MSG_FILE="$1"
+ORIGINAL_MSG=$(cat "$COMMIT_MSG_FILE")
+
+# Create prompt for Claude Code to clean the commit message
+PROMPT="Remove any AI or agent attribution from this git commit message. Specifically remove:
+- Any 'Generated with Claude Code' or similar signatures
+- Any 'Co-Authored-By: Claude' lines
+- Any AI-related emojis (🤖, etc.)
+- Any other agentic attribution
+
+Preserve the actual commit message content. Return ONLY the cleaned commit message, nothing else.
+
+Commit message to clean:
+---
+$ORIGINAL_MSG
+---"
+
+# Use Claude Code in non-interactive mode to clean the message
+CLEANED_MSG=$(echo "$PROMPT" | claude --non-interactive 2>/dev/null || echo "$ORIGINAL_MSG")
+
+# If Claude Code isn't available or fails, fall back to simple sed-based cleaning
+if [ -z "$CLEANED_MSG" ] || [ "$CLEANED_MSG" = "$ORIGINAL_MSG" ]; then
+    CLEANED_MSG=$(echo "$ORIGINAL_MSG" | \
+        sed '/🤖 Generated with \[Claude Code\]/d' | \
+        sed '/Co-Authored-By: Claude/d' | \
+        sed 's/🤖//g' | \
+        sed '/^[[:space:]]*$/d')
+fi
+
+# Write cleaned message back
+echo "$CLEANED_MSG" > "$COMMIT_MSG_FILE"
+
+exit 0
