@@ -11,16 +11,84 @@ Each skill is a self-contained directory with:
 - `SKILL.md` - Required markdown file with YAML frontmatter and instructions
 - Optional supporting files (scripts, templates, assets, references)
 
+## Installing Skills
+
+### The Agentic Way (Recommended)
+
+This repository is designed for **agentic installation** - your AI agent can install skills directly without any scripts or package managers.
+
+Simply tell your agent:
+
+```text
+"Install find-local-events from tnez/agent-skills"
+```
+
+Your agent will:
+
+1. Fetch the skill files from GitHub
+2. Detect your skills directory (or ask where to install)
+3. Save files to the appropriate location
+4. Verify installation
+
+**No npm, pip, or bash scripts required** - your agent handles everything using its built-in capabilities.
+
+### Discovery & Updates
+
+Browse available skills:
+
+```text
+"Browse skills in tnez/agent-skills"
+"What's new in tnez/agent-skills?"
+"Show me document-related skills"
+```
+
+Check for updates:
+
+```text
+"Check for updates to my installed skills"
+"Update find-local-events"
+```
+
+See [CATALOG.md](CATALOG.md) for the complete list of available skills.
+
+### How It Works
+
+Your agent uses two meta-skills:
+
+- **skill-installer**: Fetches and installs skills from GitHub using WebFetch, Bash, Write, and Glob
+- **skill-browser**: Discovers skills by reading CATALOG.md and comparing with local installation
+
+Both are pure agentic skills - they teach your agent HOW to install, rather than providing scripts to run.
+
+### Installation Locations
+
+Skills install to these locations (in priority order):
+
+1. `.agents/skills/` - Project-level, agent-agnostic (preferred)
+2. `.claude/skills/` - Project-level, Claude-specific
+3. `~/.agents/skills/` - Global, agent-agnostic
+4. `~/.claude/skills/` - Global, Claude-specific
+
+Your agent will auto-detect existing skills or ask where to install.
+
 ## Repository Structure
 
 ```text
 agent-skills/
-├── meta/                  # Meta-skills for skill development
-│   ├── skill-creator/     # Create and scaffold new skills
-│   ├── skill-tester/      # Test and validate skills
-│   └── skill-evaluator/   # Evaluate skill quality
-└── examples/              # Example domain skills
-    └── simple-task/       # Minimal reference implementation
+├── CATALOG.md             # Machine-readable catalog of all skills
+├── examples/              # Example skills demonstrating patterns
+│   ├── find-local-events/ # Search local events with location/datetime handling
+│   ├── get-weather/       # Fetch weather information
+│   └── simple-task/       # Minimal reference implementation
+├── documents/             # Document processing skills
+│   ├── image-review-pdf/  # Analyze images in PDFs
+│   └── markdown-to-pdf/   # Convert markdown to PDF
+└── meta/                  # Meta-skills for skill management
+    ├── skill-installer/   # Install skills (pure agentic)
+    ├── skill-browser/     # Discover and browse skills
+    ├── skill-creator/     # Create new skills
+    ├── skill-tester/      # Validate skills
+    └── skill-evaluator/   # Evaluate skill quality
 ```
 
 ## Quick Start
@@ -41,6 +109,28 @@ Skills are loaded automatically when relevant to your task. Each skill provides:
 4. **See workflows**: Check [WORKFLOWS.md](/Users/tnez/Code/tnez/agent-skills/main/WORKFLOWS.md) for examples
 
 ## Meta-Skills
+
+### skill-installer ⭐
+
+Pure agentic skill installation from GitHub repositories. Features:
+
+- Zero dependencies (uses WebFetch, Bash, Write, Glob)
+- Smart semantic merging for updates
+- CONTEXT.md preservation for user customizations
+- Auto-detects installation location
+
+**New paradigm**: Your agent installs skills, not scripts.
+
+### skill-browser ⭐
+
+Discover and browse available skills. Features:
+
+- Reads CATALOG.md to show available skills
+- Compares with local installation
+- Identifies updates and new additions
+- Filters by category or relevance
+
+**Usage**: "Browse skills in tnez/agent-skills" or "What's new?"
 
 ### skill-creator
 
