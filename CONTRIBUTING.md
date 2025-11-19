@@ -1,4 +1,4 @@
-# Contributing to Agent Skills
+# Contributing to .agents
 
 ## Commit Message Format
 
@@ -28,10 +28,12 @@ type(scope): description
 
 Scopes help identify which part of the repository is affected:
 
-- `skills/meta` - Meta-skills (skill-creator, skill-tester, skill-evaluator, install-skill)
+- `skills/meta` - Meta-skills (skill-creator, skill-tester, skill-evaluator, etc.)
 - `skills/examples` - Example skills (get-weather, simple-task, etc.)
+- `skills/documents` - Document processing skills
+- `workflows` - Agent workflows
 - `ci` - CI/CD configuration and workflows
-- `hooks` - Git hooks
+- `docs` - Documentation updates
 
 Multiple scopes can be specified with commas:
 

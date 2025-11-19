@@ -9,10 +9,10 @@ set -euo pipefail
 # Skill sources:
 #   - GitHub URL: https://github.com/user/repo/tree/main/path/to/skill
 #   - Local path: /path/to/skill-directory
-#   - Shorthand (from agent-skills repo): meta/skill-creator, examples/get-weather
+#   - Shorthand (from agent-skills repo): skills/meta/skill-creator, skills/examples/get-weather
 #
 # Examples:
-#   install.sh meta/skill-creator
+#   install.sh skills/meta/skill-creator
 #   install.sh /path/to/custom-skill
 #   install.sh https://github.com/user/repo/tree/main/skills/my-skill
 
@@ -44,8 +44,8 @@ Usage:
 
 Skill Sources:
   Shorthand (from agent-skills repo):
-    meta/skill-creator
-    examples/get-weather
+    skills/meta/skill-creator
+    skills/examples/get-weather
 
   Local path:
     /path/to/skill-directory
@@ -63,8 +63,8 @@ Target Directory:
     4. ~/.claude/skills/ (global, Claude-specific)
 
 Examples:
-  install.sh meta/skill-creator
-  install.sh examples/get-weather ~/.agents/skills
+  install.sh skills/meta/skill-creator
+  install.sh skills/examples/get-weather ~/.agents/skills
   install.sh /path/to/custom-skill
   install.sh https://github.com/user/repo/tree/main/skills/my-skill
 

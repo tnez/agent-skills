@@ -29,11 +29,11 @@ Determine where the skill is located:
 
 **Shorthand (from agent-skills repository)**:
 
-- `meta/skill-creator`
-- `meta/skill-tester`
-- `meta/skill-evaluator`
-- `examples/get-weather`
-- `examples/simple-task`
+- `skills/meta/skill-creator`
+- `skills/meta/skill-tester`
+- `skills/meta/skill-evaluator`
+- `skills/examples/get-weather`
+- `skills/examples/simple-task`
 
 **Local Path**:
 
@@ -113,8 +113,8 @@ bash scripts/install.sh --version
 **Install from Shorthand**:
 
 ```bash
-bash scripts/install.sh meta/skill-creator
-bash scripts/install.sh examples/get-weather
+bash scripts/install.sh skills/meta/skill-creator
+bash scripts/install.sh skills/examples/get-weather
 ```
 
 **Install from Local Path**:
@@ -134,8 +134,8 @@ bash scripts/install.sh https://github.com/user/repo/tree/main/skills/my-skill
 **Specify Target Directory**:
 
 ```bash
-bash scripts/install.sh meta/skill-creator ~/.agents/skills
-bash scripts/install.sh examples/get-weather ./.agents/skills
+bash scripts/install.sh skills/meta/skill-creator ~/.agents/skills
+bash scripts/install.sh skills/examples/get-weather ./.agents/skills
 ```
 
 ## Examples
@@ -155,7 +155,7 @@ bash scripts/install.sh examples/get-weather ./.agents/skills
 2. Install skill-creator:
 
    ```bash
-   bash scripts/install.sh meta/skill-creator
+   bash scripts/install.sh skills/meta/skill-creator
    ```
 
 3. Verify installation:
@@ -170,8 +170,8 @@ bash scripts/install.sh examples/get-weather ./.agents/skills
 ℹ Discovering skills installation directory...
 ⚠ Found empty skills directory: ./.agents/skills
 ℹ Target directory: ./.agents/skills
-ℹ Found skill locally: /Users/user/agent-skills/main/meta/skill-creator
-ℹ Installing skill-creator from /Users/user/agent-skills/main/meta/skill-creator
+ℹ Found skill locally: /Users/user/agent-skills/worktrees/main/skills/meta/skill-creator
+ℹ Installing skill-creator from /Users/user/agent-skills/worktrees/main/skills/meta/skill-creator
 ✓ Installed skill: skill-creator → ./.agents/skills/skill-creator
 ```
 
@@ -182,10 +182,10 @@ bash scripts/install.sh examples/get-weather ./.agents/skills
 **Steps**:
 
 ```bash
-bash scripts/install.sh meta/skill-creator
-bash scripts/install.sh meta/skill-tester
-bash scripts/install.sh meta/skill-evaluator
-bash scripts/install.sh examples/get-weather
+bash scripts/install.sh skills/meta/skill-creator
+bash scripts/install.sh skills/meta/skill-tester
+bash scripts/install.sh skills/meta/skill-evaluator
+bash scripts/install.sh skills/examples/get-weather
 ```
 
 **Result**: All skills installed to the same auto-detected directory
@@ -238,7 +238,7 @@ bash scripts/install.sh https://github.com/user/repo/tree/main/skills/awesome-sk
 **Steps**:
 
 ```bash
-bash scripts/install.sh meta/skill-creator
+bash scripts/install.sh skills/meta/skill-creator
 ```
 
 **Interactive Prompt**:

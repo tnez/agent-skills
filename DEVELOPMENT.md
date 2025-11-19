@@ -1,6 +1,6 @@
-# Agent Skills Workflows
+# Development Workflows
 
-This document provides concrete examples of how agents and humans use the skills in this repository.
+This document provides concrete examples of development workflows for working with this repository - creating skills, testing, evaluating, and contributing.
 
 ## Workflow 1: Creating a New Skill (Agent Perspective)
 

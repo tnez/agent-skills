@@ -1,9 +1,9 @@
-# Agent Skills Catalog
+# .agents Catalog
 
 **Repository:** tnez/agent-skills
-**Last Updated:** 2025-11-16
+**Last Updated:** 2025-11-19
 
-This catalog lists all available agent skills in this repository. Use with skill-browser to discover skills and skill-installer to install them.
+This catalog lists all available agent resources (skills, workflows) in this repository. Use with skill-browser to discover and skill-installer to install them.
 
 ## Examples
 
@@ -11,7 +11,7 @@ Example skills demonstrating common patterns and use cases.
 
 ### find-local-events
 
-- **Path:** examples/find-local-events
+- **Path:** skills/examples/find-local-events
 - **Added:** 2025-11-16
 - **Updated:** 2025-11-16
 - **Description:** Search for local events, activities, and happenings in a specified location and timeframe with location disambiguation and datetime clarification
@@ -20,7 +20,7 @@ Example skills demonstrating common patterns and use cases.
 
 ### get-weather
 
-- **Path:** examples/get-weather
+- **Path:** skills/examples/get-weather
 - **Added:** 2025-11-15
 - **Updated:** 2025-11-16
 - **Description:** Fetch and display current weather information for a specified location using wttr.in
@@ -29,7 +29,7 @@ Example skills demonstrating common patterns and use cases.
 
 ### simple-task
 
-- **Path:** examples/simple-task
+- **Path:** skills/examples/simple-task
 - **Added:** 2025-11-15
 - **Updated:** 2025-11-16
 - **Description:** Format and validate JSON data structures - pretty-print, validate syntax, convert between formats
@@ -42,7 +42,7 @@ Skills for document processing, conversion, and analysis.
 
 ### image-review-pdf
 
-- **Path:** documents/image-review-pdf
+- **Path:** skills/documents/image-review-pdf
 - **Added:** 2025-11-16
 - **Updated:** 2025-11-16
 - **Description:** Review and analyze images within PDF documents with composable library functions
@@ -51,7 +51,7 @@ Skills for document processing, conversion, and analysis.
 
 ### markdown-to-pdf
 
-- **Path:** documents/markdown-to-pdf
+- **Path:** skills/documents/markdown-to-pdf
 - **Added:** 2025-11-15
 - **Updated:** 2025-11-16
 - **Description:** Convert markdown files to professionally formatted PDF documents using Pandoc
@@ -64,7 +64,7 @@ Skills for managing, creating, and evaluating other skills.
 
 ### install-skill
 
-- **Path:** meta/install-skill
+- **Path:** skills/meta/install-skill
 - **Added:** 2025-11-15
 - **Updated:** 2025-11-16
 - **Description:** Install agent skills from various sources using bash script - supports local paths, GitHub URLs, and repository shorthand
@@ -74,7 +74,7 @@ Skills for managing, creating, and evaluating other skills.
 
 ### skill-browser
 
-- **Path:** meta/skill-browser
+- **Path:** skills/meta/skill-browser
 - **Added:** 2025-11-16
 - **Updated:** 2025-11-16
 - **Description:** Discover, browse, and compare agent skills from repositories - shows new skills, updates, and helps find relevant skills
@@ -83,7 +83,7 @@ Skills for managing, creating, and evaluating other skills.
 
 ### skill-creator
 
-- **Path:** meta/skill-creator
+- **Path:** skills/meta/skill-creator
 - **Added:** 2025-11-15
 - **Updated:** 2025-11-16
 - **Description:** Create new agent skills with templates, validation, and best practices guidance
@@ -92,7 +92,7 @@ Skills for managing, creating, and evaluating other skills.
 
 ### skill-evaluator
 
-- **Path:** meta/skill-evaluator
+- **Path:** skills/meta/skill-evaluator
 - **Added:** 2025-11-15
 - **Updated:** 2025-11-16
 - **Description:** Evaluate agent skill quality using rubric-based assessment - assess effectiveness and identify improvement opportunities
@@ -101,7 +101,7 @@ Skills for managing, creating, and evaluating other skills.
 
 ### skill-installer
 
-- **Path:** meta/skill-installer
+- **Path:** skills/meta/skill-installer
 - **Added:** 2025-11-16
 - **Updated:** 2025-11-16
 - **Description:** Install agent skills from GitHub repositories using pure agentic capabilities - no scripts or dependencies required
@@ -111,7 +111,7 @@ Skills for managing, creating, and evaluating other skills.
 
 ### skill-tester
 
-- **Path:** meta/skill-tester
+- **Path:** skills/meta/skill-tester
 - **Added:** 2025-11-15
 - **Updated:** 2025-11-16
 - **Description:** Test and validate agent skills - verify structure, parse frontmatter, check completeness

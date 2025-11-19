@@ -1,44 +1,62 @@
-# Agent Skills
+# .agents Directory
 
-A curated collection of agent skills for Claude, focusing on meta-skills for skill development and quality assurance.
+A curated collection of agent capabilities including skills, workflows, and tooling for building agentic projects.
 
-## What are Agent Skills?
+## What is the .agents Directory?
 
-Skills are folders of instructions, scripts, and resources that Claude loads dynamically to improve performance on specialized tasks. They function as "onboarding guides" that transform Claude into specialized agents by bundling procedural knowledge, workflows, and tool integrations.
+The `.agents/` directory is a standardized location for agent-related resources in your project. It provides a consistent structure for:
 
-Each skill is a self-contained directory with:
+- **Skills** - Focused, reusable capabilities (convert markdown to PDF, validate YAML, etc.)
+- **Workflows** - Multi-step orchestrations that compose skills and tools
+- **Meta-tooling** - Tools for creating, testing, and managing agent capabilities
 
-- `SKILL.md` - Required markdown file with YAML frontmatter and instructions
-- Optional supporting files (scripts, templates, assets, references)
+Think of it as your project's "agent workspace" - everything your AI agent needs to work effectively on your codebase.
 
-## Installing Skills
+## Directory Structure
+
+When consumed, this repository installs to your project's `.agents/` directory:
+
+```text
+.agents/
+├── skills/           # Focused, reusable capabilities
+│   ├── meta/         # Tools for skill management
+│   ├── examples/     # Example implementations
+│   └── documents/    # Document processing
+└── workflows/        # Multi-step orchestrations
+    └── examples/     # Example workflows
+```
+
+## Installation
 
 ### The Agentic Way (Recommended)
 
-This repository is designed for **agentic installation** - your AI agent can install skills directly without any scripts or package managers.
+This repository is designed for **agentic installation** - your AI agent can install resources directly without scripts or package managers.
 
 Simply tell your agent:
 
 ```text
-"Install find-local-events from tnez/agent-skills"
+"Install find-local-events skill from tnez/agent-skills"
+"Install skills from tnez/agent-skills"
 ```
 
 Your agent will:
 
-1. Fetch the skill files from GitHub
-2. Detect your skills directory (or ask where to install)
-3. Save files to the appropriate location
+1. Fetch the files from GitHub
+2. Detect your `.agents/` directory (or ask where to install)
+3. Map repository structure to installation location:
+   - `skills/` → `.agents/skills/`
+   - `workflows/` → `.agents/workflows/`
 4. Verify installation
 
 **No npm, pip, or bash scripts required** - your agent handles everything using its built-in capabilities.
 
 ### Discovery & Updates
 
-Browse available skills:
+Browse available resources:
 
 ```text
 "Browse skills in tnez/agent-skills"
-"What's new in tnez/agent-skills?"
+"What workflows are available?"
 "Show me document-related skills"
 ```
 
@@ -46,56 +64,60 @@ Check for updates:
 
 ```text
 "Check for updates to my installed skills"
-"Update find-local-events"
+"Update skill-installer"
 ```
 
-See [CATALOG.md](CATALOG.md) for the complete list of available skills.
+See [CATALOG.md](CATALOG.md) for the complete list.
 
 ### How It Works
 
-Your agent uses two meta-skills:
+Your agent uses meta-skills from this repository:
 
-- **skill-installer**: Fetches and installs skills from GitHub using WebFetch, Bash, Write, and Glob
-- **skill-browser**: Discovers skills by reading CATALOG.md and comparing with local installation
+- **skill-installer**: Fetches and installs skills from GitHub
+- **skill-browser**: Discovers available skills and workflows
 
-Both are pure agentic skills - they teach your agent HOW to install, rather than providing scripts to run.
+Both are pure agentic - they teach your agent HOW to install, rather than providing scripts to run.
 
 ### Installation Locations
 
-Skills install to these locations (in priority order):
+Resources install to these locations (in priority order):
 
-1. `.agents/skills/` - Project-level, agent-agnostic (preferred)
-2. `.claude/skills/` - Project-level, Claude-specific
-3. `~/.agents/skills/` - Global, agent-agnostic
-4. `~/.claude/skills/` - Global, Claude-specific
+1. `.agents/` - Project-level, agent-agnostic (preferred)
+2. `.claude/` - Project-level, Claude-specific
+3. `~/.agents/` - Global, agent-agnostic
+4. `~/.claude/` - Global, Claude-specific
 
-Your agent will auto-detect existing skills or ask where to install.
+Your agent will auto-detect or ask where to install.
 
-## Repository Structure
+## Repository Development Structure
 
 ```text
-agent-skills/
-├── CATALOG.md             # Machine-readable catalog of all skills
-├── examples/              # Example skills demonstrating patterns
-│   ├── find-local-events/ # Search local events with location/datetime handling
-│   ├── get-weather/       # Fetch weather information
-│   └── simple-task/       # Minimal reference implementation
-├── documents/             # Document processing skills
-│   ├── image-review-pdf/  # Analyze images in PDFs
-│   └── markdown-to-pdf/   # Convert markdown to PDF
-└── meta/                  # Meta-skills for skill management
-    ├── skill-installer/   # Install skills (pure agentic)
-    ├── skill-browser/     # Discover and browse skills
-    ├── skill-creator/     # Create new skills
-    ├── skill-tester/      # Validate skills
-    └── skill-evaluator/   # Evaluate skill quality
+worktrees/main/
+├── CATALOG.md             # Machine-readable catalog
+├── skills/                # → .agents/skills/ when consumed
+│   ├── meta/              # Skill management tools
+│   │   ├── skill-installer/
+│   │   ├── skill-browser/
+│   │   ├── skill-creator/
+│   │   ├── skill-tester/
+│   │   └── skill-evaluator/
+│   ├── examples/          # Example implementations
+│   │   ├── find-local-events/
+│   │   ├── get-weather/
+│   │   └── simple-task/
+│   └── documents/         # Document processing
+│       ├── image-review-pdf/
+│       └── markdown-to-pdf/
+└── workflows/             # → .agents/workflows/ when consumed
+    ├── README.md
+    └── examples/
 ```
 
 ## Quick Start
 
 ### For Agents
 
-Skills are loaded automatically when relevant to your task. Each skill provides:
+Resources are loaded automatically when relevant to your task. Each provides:
 
 - Clear instructions for when and how to use it
 - Templates and examples
@@ -103,10 +125,48 @@ Skills are loaded automatically when relevant to your task. Each skill provides:
 
 ### For Humans
 
-1. **Browse skills**: Explore `meta/` and `examples/` directories
-2. **Use meta-skills**: Leverage skill-creator, skill-tester, and skill-evaluator
-3. **Create custom skills**: Follow the [Agent Skills Specification](https://github.com/anthropics/skills/blob/main/agent_skills_spec.md)
-4. **See workflows**: Check [WORKFLOWS.md](/Users/tnez/Code/tnez/agent-skills/main/WORKFLOWS.md) for examples
+1. **Browse skills**: Explore `skills/` directory
+2. **Browse workflows**: Explore `workflows/` directory
+3. **Use meta-skills**: Leverage skill-creator, skill-tester, skill-evaluator
+4. **Create custom resources**: Follow specifications in each directory's README
+5. **See development workflows**: Check WORKFLOWS.md for development patterns
+
+## Skills
+
+Skills are focused, reusable capabilities that agents load dynamically. Each skill is a self-contained directory with:
+
+- `SKILL.md` - Required markdown file with YAML frontmatter and instructions
+- `CONTEXT.md` - Optional user/project-specific context and customizations
+- Optional supporting files (scripts, templates, assets, references)
+
+**Format**:
+
+```markdown
+---
+name: skill-name
+description: What the skill does and when to use it
+license: MIT
+---
+
+# Skill Instructions
+
+Imperative instructions for the agent...
+```
+
+**CONTEXT.md Pattern**: Co-locate a `CONTEXT.md` file with any `SKILL.md` to inject user or project-specific context. The skill remains general and reusable while `CONTEXT.md` provides customization. This file is preserved during skill updates.
+
+See [Agent Skills Specification](https://github.com/anthropics/skills/blob/main/agent_skills_spec.md) for details.
+
+## Workflows
+
+Workflows are multi-step orchestrations that compose skills, tools, and agent behaviors. They handle complex tasks requiring:
+
+- Multiple phases or steps
+- Decision making and conditionals
+- Coordination of multiple skills
+- Standardized procedures
+
+See `workflows/README.md` for details on creating workflows.
 
 ## Meta-Skills
 
@@ -125,7 +185,7 @@ Pure agentic skill installation from GitHub repositories. Features:
 
 Discover and browse available skills. Features:
 
-- Reads CATALOG.md to show available skills
+- Reads CATALOG.md to show available resources
 - Compares with local installation
 - Identifies updates and new additions
 - Filters by category or relevance
@@ -156,43 +216,22 @@ Assess skill quality using rubric-based evaluation. Evaluates:
 - Completeness and focus
 - Examples and documentation quality
 
-## Skill Format
-
-Every skill requires `SKILL.md` with this structure:
-
-```markdown
----
-name: skill-name
-description: Clear explanation of what the skill does and when Claude should use it
-license: MIT
----
-
-# Skill Instructions
-
-Imperative instructions for Claude to follow...
-```
-
-**Requirements**:
-
-- Skill directory name must match `name` field exactly
-- Use hyphen-case for skill names
-- Keep description clear (~200 characters)
-- Explain both WHAT the skill does AND WHEN to use it
-
 ## Contributing
 
-When creating new skills:
+When creating new skills or workflows:
 
-1. Use `skill-creator` to scaffold the structure
+1. Use `skill-creator` for skills or follow `workflows/README.md` for workflows
 2. Test with `skill-tester` to ensure spec compliance
 3. Evaluate with `skill-evaluator` for quality assurance
 4. Follow the test → evaluate → refine cycle
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 ## Resources
 
 - [Agent Skills Specification](https://github.com/anthropics/skills/blob/main/agent_skills_spec.md)
 - [Anthropics Skills Repository](https://github.com/anthropics/skills)
-- [Workflows Documentation](/Users/tnez/Code/tnez/agent-skills/main/WORKFLOWS.md)
+- [Development Workflows](DEVELOPMENT.md)
 
 ## License
 

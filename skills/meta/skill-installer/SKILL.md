@@ -94,9 +94,9 @@ https://raw.githubusercontent.com/{owner}/{repo}/{branch}/{path}/{skill-name}/{f
 **Example URLs**:
 
 ```text
-https://raw.githubusercontent.com/tnez/agent-skills/main/examples/find-local-events/SKILL.md
-https://raw.githubusercontent.com/tnez/agent-skills/main/examples/find-local-events/CONTEXT.md
-```text
+https://raw.githubusercontent.com/tnez/agent-skills/main/skills/examples/find-local-events/SKILL.md
+https://raw.githubusercontent.com/tnez/agent-skills/main/skills/examples/find-local-events/CONTEXT.md
+```
 
 ### Step 4: Fetch Skill Files
 
@@ -260,7 +260,7 @@ To use this skill, invoke it by name or ask your agent to apply it.
 
 1. Parse: skill="find-local-events", repo="tnez/agent-skills"
 2. Detect installation location → `.agents/skills/`
-3. Construct URL: `https://raw.githubusercontent.com/tnez/agent-skills/main/examples/find-local-events/SKILL.md`
+3. Construct URL: `https://raw.githubusercontent.com/tnez/agent-skills/main/skills/examples/find-local-events/SKILL.md`
 4. Fetch SKILL.md and CONTEXT.md
 5. Create `.agents/skills/find-local-events/`
 6. Save both files
@@ -284,7 +284,7 @@ This skill helps you search for local events with location and datetime disambig
 **Process**:
 
 1. Parse: skill="skill-creator", repo="tnez/agent-skills", path="meta"
-2. Construct URL with path: `.../main/meta/skill-creator/SKILL.md`
+2. Construct URL with path: `.../main/skills/meta/skill-creator/SKILL.md`
 3. Follow standard installation process
 
 **Note**: Path helps locate skill but doesn't affect installation location.
@@ -331,7 +331,7 @@ This skill helps you search for local events with location and datetime disambig
 
 ### Full GitHub URL
 
-**Input**: "Install from <https://github.com/tnez/agent-skills/tree/main/examples/find-local-events>"
+**Input**: "Install from <https://github.com/tnez/agent-skills/tree/main/skills/examples/find-local-events>"
 
 **Resolution**:
 
@@ -341,7 +341,7 @@ This skill helps you search for local events with location and datetime disambig
 
 ### Raw URL
 
-**Input**: "Install from <https://raw.githubusercontent.com/tnez/agent-skills/main/examples/find-local-events/SKILL.md>"
+**Input**: "Install from <https://raw.githubusercontent.com/tnez/agent-skills/main/skills/examples/find-local-events/SKILL.md>"
 
 **Resolution**:
 
@@ -391,7 +391,7 @@ This skill helps you search for local events with location and datetime disambig
 
 ```text
 ✗ Skill not found: find-local-events
-  Checked: https://raw.githubusercontent.com/tnez/agent-skills/main/examples/find-local-events/SKILL.md
+  Checked: https://raw.githubusercontent.com/tnez/agent-skills/main/skills/examples/find-local-events/SKILL.md
 
 Try:
   1. Check CATALOG.md for available skills
