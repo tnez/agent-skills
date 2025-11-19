@@ -1,6 +1,6 @@
 # .agents Catalog
 
-**Repository:** tnez/agent-skills
+**Repository:** tnez/dot-agents
 **Last Updated:** 2025-11-19
 
 This catalog lists all available agent resources (skills, workflows) in this repository. Use with skill-browser to discover and skill-installer to install them.
@@ -127,7 +127,7 @@ Skills for managing, creating, and evaluating other skills.
 Tell your agent to install any skill:
 
 ```text
-"Install find-local-events from tnez/agent-skills"
+"Install find-local-events from tnez/dot-agents"
 ```
 
 Your agent will use the skill-installer skill to fetch and install it.
@@ -137,8 +137,8 @@ Your agent will use the skill-installer skill to fetch and install it.
 Explore available skills:
 
 ```text
-"Browse skills in tnez/agent-skills"
-"What's new in tnez/agent-skills?"
+"Browse skills in tnez/dot-agents"
+"What's new in tnez/dot-agents?"
 "Check for updates to my installed skills"
 ```
 
@@ -147,7 +147,7 @@ Explore available skills:
 If your agent needs guidance, point it to the installer:
 
 ```text
-"Use skill-installer from tnez/agent-skills to install find-local-events"
+"Use skill-installer from tnez/dot-agents to install find-local-events"
 ```
 
 ## Categories Explained

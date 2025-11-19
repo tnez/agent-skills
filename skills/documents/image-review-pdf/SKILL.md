@@ -264,7 +264,7 @@ Add to your `Justfile`:
 
 ```just
 review-inbox:
-    python ~/agent-skills/main/documents/image-review-pdf/scripts/process.py \
+    python ~/dot-agents/worktrees/main/skills/documents/image-review-pdf/scripts/process.py \
       ~/Desktop/inbox \
       -o ~/Desktop/inbox-review-{{date}}.pdf \
       --title "Inbox Review"

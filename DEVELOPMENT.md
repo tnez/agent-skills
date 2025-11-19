@@ -54,7 +54,7 @@ This document provides concrete examples of development workflows for working wi
 1. **Navigate to skill directory**
 
    ```bash
-   cd agent-skills/main/meta/skill-creator
+   cd dot-agents/worktrees/main/skills/meta/skill-creator
    ```
 
 2. **Invoke skill-tester**

@@ -9,7 +9,7 @@ set -euo pipefail
 # Skill sources:
 #   - GitHub URL: https://github.com/user/repo/tree/main/path/to/skill
 #   - Local path: /path/to/skill-directory
-#   - Shorthand (from agent-skills repo): skills/meta/skill-creator, skills/examples/get-weather
+#   - Shorthand (from dot-agents repo): skills/meta/skill-creator, skills/examples/get-weather
 #
 # Examples:
 #   install.sh skills/meta/skill-creator
@@ -17,7 +17,7 @@ set -euo pipefail
 #   install.sh https://github.com/user/repo/tree/main/skills/my-skill
 
 VERSION="1.0.0"
-AGENT_SKILLS_REPO="https://github.com/tnez/agent-skills"
+AGENT_SKILLS_REPO="https://github.com/tnez/dot-agents"
 
 # Colors for output
 RED='\033[0;31m'
@@ -43,7 +43,7 @@ Usage:
   install.sh --version
 
 Skill Sources:
-  Shorthand (from agent-skills repo):
+  Shorthand (from dot-agents repo):
     skills/meta/skill-creator
     skills/examples/get-weather
 
@@ -202,17 +202,17 @@ install_from_local() {
     success "Installed skill: $skill_name → $target_path"
 }
 
-# Install from shorthand (agent-skills repo)
+# Install from shorthand (dot-agents repo)
 install_from_shorthand() {
     local shorthand="$1"
     local target_dir="$2"
 
-    # Try to find in local agent-skills repo first
+    # Try to find in local dot-agents repo first
     local local_paths=(
         "$(pwd)/$shorthand"
         "$(pwd)/main/$shorthand"
-        "$HOME/agent-skills/$shorthand"
-        "$HOME/agent-skills/main/$shorthand"
+        "$HOME/dot-agents/$shorthand"
+        "$HOME/dot-agents/main/$shorthand"
     )
 
     for path in "${local_paths[@]}"; do
@@ -224,16 +224,16 @@ install_from_shorthand() {
     done
 
     # Not found locally, fetch from GitHub
-    info "Fetching from agent-skills repository..."
+    info "Fetching from dot-agents repository..."
 
     local temp_dir
     temp_dir=$(mktemp -d)
     trap 'rm -rf "$temp_dir"' EXIT
 
     # Clone the repo (sparse checkout for efficiency)
-    info "Cloning agent-skills repository..."
+    info "Cloning dot-agents repository..."
     git clone --depth 1 --filter=blob:none --sparse "$AGENT_SKILLS_REPO" "$temp_dir" 2>/dev/null || {
-        error "Failed to clone agent-skills repository"
+        error "Failed to clone dot-agents repository"
         exit 1
     }
 
@@ -340,7 +340,7 @@ main() {
         # Absolute or relative path
         install_from_local "$skill_source" "$target_dir"
     else
-        # Shorthand (from agent-skills repo)
+        # Shorthand (from dot-agents repo)
         install_from_shorthand "$skill_source" "$target_dir"
     fi
 }

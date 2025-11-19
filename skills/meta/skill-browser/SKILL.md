@@ -27,14 +27,14 @@ Extract repository information from user request:
 
 **Repository Formats**:
 
-- Short form: "tnez/agent-skills"
-- Full URL: "<https://github.com/tnez/agent-skills>"
-- Default: If not specified, use "tnez/agent-skills"
+- Short form: "tnez/dot-agents"
+- Full URL: "<https://github.com/tnez/dot-agents>"
+- Default: If not specified, use "tnez/dot-agents"
 
 **Branch**:
 
 - Default to "main"
-- Can specify: "browse skills in tnez/agent-skills branch develop"
+- Can specify: "browse skills in tnez/dot-agents branch develop"
 
 ### Step 2: Fetch Skills Catalog
 
@@ -49,7 +49,7 @@ https://raw.githubusercontent.com/{owner}/{repo}/{branch}/CATALOG.md
 **Example**:
 
 ```text
-https://raw.githubusercontent.com/tnez/agent-skills/main/CATALOG.md
+https://raw.githubusercontent.com/tnez/dot-agents/main/CATALOG.md
 ```text
 
 **Use WebFetch** to download CATALOG.md content.
@@ -149,7 +149,7 @@ Format and display skill information:
 **Presentation Format**:
 
 ```text
-# Available Skills from tnez/agent-skills
+# Available Skills from tnez/dot-agents
 
 ## 🆕 New Skills (not installed)
 
@@ -181,7 +181,7 @@ Create new agent skills with templates
 
 ---
 
-Install skills: "Install find-local-events from tnez/agent-skills"
+Install skills: "Install find-local-events from tnez/dot-agents"
 Update skills: "Update get-weather"
 Browse category: "Show me all document skills"
 ```text
@@ -191,11 +191,11 @@ Browse category: "Show me all document skills"
 ### Example 1: Discover New Skills
 
 **User Request**:
-"What's new in tnez/agent-skills?"
+"What's new in tnez/dot-agents?"
 
 **Process**:
 
-1. Fetch CATALOG.md from tnez/agent-skills
+1. Fetch CATALOG.md from tnez/dot-agents
 2. Parse all skills
 3. Check local installation
 4. Filter to only NEW skills (not installed)
@@ -385,7 +385,7 @@ Seamlessly hand off to skill-installer for installation:
 **Workflow**:
 
 ```text
-User: "Browse skills in tnez/agent-skills"
+User: "Browse skills in tnez/dot-agents"
 Agent: [Uses skill-browser to show catalog]
 
 Agent: "Found 3 new skills. Would you like to install any?"
@@ -433,20 +433,20 @@ Agent: [Uses skill-installer for each]
 ### Catalog Not Found
 
 ```text
-✗ CATALOG.md not found in tnez/agent-skills
+✗ CATALOG.md not found in tnez/dot-agents
 
 The repository may not have a skills catalog yet.
 
 Try:
-  1. Browse repository directly: https://github.com/tnez/agent-skills
-  2. Install specific skill: "Install find-local-events from tnez/agent-skills"
+  1. Browse repository directly: https://github.com/tnez/dot-agents
+  2. Install specific skill: "Install find-local-events from tnez/dot-agents"
   3. Check if repository has different catalog format
 ```text
 
 ### Network Error
 
 ```text
-✗ Cannot fetch catalog from tnez/agent-skills
+✗ Cannot fetch catalog from tnez/dot-agents
   Network error or repository unavailable
 
 Try:
@@ -460,7 +460,7 @@ Try:
 ```text
 ℹ️ No skills currently installed
 
-You can install skills from tnez/agent-skills:
+You can install skills from tnez/dot-agents:
   "Install skill-creator" - Create new skills
   "Install find-local-events" - Search for local events
 
@@ -529,7 +529,7 @@ A: Skill-browser only shows repository catalogs. Your local-only skills won't ap
 
 ## Resources
 
-- Agent Skills Repository: <https://github.com/tnez/agent-skills>
+- Agent Skills Repository: <https://github.com/tnez/dot-agents>
 - CATALOG.md format specification (in this repository)
 - skill-installer for installation
 - Agent Skills Specification: <https://github.com/anthropics/skills/blob/main/agent_skills_spec.md>

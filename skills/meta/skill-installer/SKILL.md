@@ -13,7 +13,7 @@ Install agent skills from GitHub repositories directly into your local environme
 Use skill-installer when you need to:
 
 - Install a specific skill from a GitHub repository
-- Add skills from the tnez/agent-skills collection
+- Add skills from the tnez/dot-agents collection
 - Update existing skills to latest versions
 - Set up skills in a new project or environment
 - Install skills from any repository following the agent skills specification
@@ -27,7 +27,7 @@ Extract key information from the user's request:
 **Required**:
 
 - Skill name (e.g., "find-local-events")
-- Repository (e.g., "tnez/agent-skills")
+- Repository (e.g., "tnez/dot-agents")
 
 **Optional**:
 
@@ -37,9 +37,9 @@ Extract key information from the user's request:
 
 **Example Requests**:
 
-- "Install find-local-events from tnez/agent-skills"
+- "Install find-local-events from tnez/dot-agents"
 - "Install the skill-creator skill"
-- "Add markdown-to-pdf from tnez/agent-skills/documents"
+- "Add markdown-to-pdf from tnez/dot-agents/documents"
 
 ### Step 2: Determine Installation Location
 
@@ -94,8 +94,8 @@ https://raw.githubusercontent.com/{owner}/{repo}/{branch}/{path}/{skill-name}/{f
 **Example URLs**:
 
 ```text
-https://raw.githubusercontent.com/tnez/agent-skills/main/skills/examples/find-local-events/SKILL.md
-https://raw.githubusercontent.com/tnez/agent-skills/main/skills/examples/find-local-events/CONTEXT.md
+https://raw.githubusercontent.com/tnez/dot-agents/main/skills/examples/find-local-events/SKILL.md
+https://raw.githubusercontent.com/tnez/dot-agents/main/skills/examples/find-local-events/CONTEXT.md
 ```
 
 ### Step 4: Fetch Skill Files
@@ -254,13 +254,13 @@ To use this skill, invoke it by name or ask your agent to apply it.
 ### Example 1: Install Single Skill
 
 **User Request**:
-"Install find-local-events from tnez/agent-skills"
+"Install find-local-events from tnez/dot-agents"
 
 **Process**:
 
-1. Parse: skill="find-local-events", repo="tnez/agent-skills"
+1. Parse: skill="find-local-events", repo="tnez/dot-agents"
 2. Detect installation location → `.agents/skills/`
-3. Construct URL: `https://raw.githubusercontent.com/tnez/agent-skills/main/skills/examples/find-local-events/SKILL.md`
+3. Construct URL: `https://raw.githubusercontent.com/tnez/dot-agents/main/skills/examples/find-local-events/SKILL.md`
 4. Fetch SKILL.md and CONTEXT.md
 5. Create `.agents/skills/find-local-events/`
 6. Save both files
@@ -279,11 +279,11 @@ This skill helps you search for local events with location and datetime disambig
 ### Example 2: Install with Category Path
 
 **User Request**:
-"Install skill-creator from tnez/agent-skills/meta"
+"Install skill-creator from tnez/dot-agents/meta"
 
 **Process**:
 
-1. Parse: skill="skill-creator", repo="tnez/agent-skills", path="meta"
+1. Parse: skill="skill-creator", repo="tnez/dot-agents", path="meta"
 2. Construct URL with path: `.../main/skills/meta/skill-creator/SKILL.md`
 3. Follow standard installation process
 
@@ -292,12 +292,12 @@ This skill helps you search for local events with location and datetime disambig
 ### Example 3: Update Existing Skill
 
 **User Request**:
-"Update my installed skills from tnez/agent-skills"
+"Update my installed skills from tnez/dot-agents"
 
 **Process**:
 
 1. List currently installed skills in `.agents/skills/`
-2. For each skill, check if it exists in tnez/agent-skills
+2. For each skill, check if it exists in tnez/dot-agents
 3. Fetch latest version
 4. Compare with installed version (check file dates/content)
 5. Ask user which to update
@@ -306,7 +306,7 @@ This skill helps you search for local events with location and datetime disambig
 ### Example 4: First-Time Setup
 
 **User Request**:
-"Install skill-creator and skill-browser from tnez/agent-skills"
+"Install skill-creator and skill-browser from tnez/dot-agents"
 
 **Process**:
 
@@ -321,7 +321,7 @@ This skill helps you search for local events with location and datetime disambig
 
 ### Direct Repository Reference
 
-**Input**: "Install find-local-events from tnez/agent-skills"
+**Input**: "Install find-local-events from tnez/dot-agents"
 
 **Resolution**:
 
@@ -331,7 +331,7 @@ This skill helps you search for local events with location and datetime disambig
 
 ### Full GitHub URL
 
-**Input**: "Install from <https://github.com/tnez/agent-skills/tree/main/skills/examples/find-local-events>"
+**Input**: "Install from <https://github.com/tnez/dot-agents/tree/main/skills/examples/find-local-events>"
 
 **Resolution**:
 
@@ -341,7 +341,7 @@ This skill helps you search for local events with location and datetime disambig
 
 ### Raw URL
 
-**Input**: "Install from <https://raw.githubusercontent.com/tnez/agent-skills/main/skills/examples/find-local-events/SKILL.md>"
+**Input**: "Install from <https://raw.githubusercontent.com/tnez/dot-agents/main/skills/examples/find-local-events/SKILL.md>"
 
 **Resolution**:
 
@@ -391,7 +391,7 @@ This skill helps you search for local events with location and datetime disambig
 
 ```text
 ✗ Skill not found: find-local-events
-  Checked: https://raw.githubusercontent.com/tnez/agent-skills/main/skills/examples/find-local-events/SKILL.md
+  Checked: https://raw.githubusercontent.com/tnez/dot-agents/main/skills/examples/find-local-events/SKILL.md
 
 Try:
   1. Check CATALOG.md for available skills
@@ -439,7 +439,7 @@ Try:
 Use skill-browser to discover skills, then skill-installer to install selected ones:
 
 ```text
-User: "Show me available skills from tnez/agent-skills"
+User: "Show me available skills from tnez/dot-agents"
 Agent: [Uses skill-browser to list skills]
 User: "Install find-local-events"
 Agent: [Uses skill-installer to install]
@@ -488,7 +488,7 @@ This skill works with any GitHub repository following the agent skills specifica
 ### Custom Branches
 
 ```text
-"Install find-local-events from tnez/agent-skills branch dev"
+"Install find-local-events from tnez/dot-agents branch dev"
 ```text
 
 Modify URL construction to use specified branch instead of "main".
@@ -496,7 +496,7 @@ Modify URL construction to use specified branch instead of "main".
 ### Batch Installation
 
 ```text
-"Install skill-creator, skill-tester, and skill-evaluator from tnez/agent-skills"
+"Install skill-creator, skill-tester, and skill-evaluator from tnez/dot-agents"
 ```text
 
 Loop through skill list and install each one.
@@ -534,7 +534,7 @@ Or use the skill-uninstaller skill if available.
 
 ## Resources
 
-- Agent Skills Repository: <https://github.com/tnez/agent-skills>
+- Agent Skills Repository: <https://github.com/tnez/dot-agents>
 - Agent Skills Specification: <https://github.com/anthropics/skills/blob/main/agent_skills_spec.md>
 - Skills Catalog: CATALOG.md in repository root
 ````

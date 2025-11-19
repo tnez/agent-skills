@@ -35,8 +35,8 @@ This repository is designed for **agentic installation** - your AI agent can ins
 Simply tell your agent:
 
 ```text
-"Install find-local-events skill from tnez/agent-skills"
-"Install skills from tnez/agent-skills"
+"Install find-local-events skill from tnez/dot-agents"
+"Install skills from tnez/dot-agents"
 ```
 
 Your agent will:
@@ -55,7 +55,7 @@ Your agent will:
 Browse available resources:
 
 ```text
-"Browse skills in tnez/agent-skills"
+"Browse skills in tnez/dot-agents"
 "What workflows are available?"
 "Show me document-related skills"
 ```
@@ -190,7 +190,7 @@ Discover and browse available skills. Features:
 - Identifies updates and new additions
 - Filters by category or relevance
 
-**Usage**: "Browse skills in tnez/agent-skills" or "What's new?"
+**Usage**: "Browse skills in tnez/dot-agents" or "What's new?"
 
 ### skill-creator
 

@@ -1,6 +1,6 @@
 ---
 name: install-skill
-description: Install agent skills from various sources including local paths, GitHub URLs, or the agent-skills repository. Use when adding new skills to a project or user environment.
+description: Install agent skills from various sources including local paths, GitHub URLs, or the dot-agents repository. Use when adding new skills to a project or user environment.
 license: MIT
 allowed-tools:
   - Bash
@@ -9,13 +9,13 @@ allowed-tools:
 
 # Install Skill
 
-Install agent skills from local paths, GitHub repositories, or the agent-skills library.
+Install agent skills from local paths, GitHub repositories, or the dot-agents library.
 
 ## When to Use This Skill
 
 Use install-skill when you need to:
 
-- Add a skill from the agent-skills repository to your project
+- Add a skill from the dot-agents repository to your project
 - Install a custom skill from a local directory
 - Fetch and install a skill from a GitHub repository
 - Set up skills for the first time in a project
@@ -27,7 +27,7 @@ Use install-skill when you need to:
 
 Determine where the skill is located:
 
-**Shorthand (from agent-skills repository)**:
+**Shorthand (from dot-agents repository)**:
 
 - `skills/meta/skill-creator`
 - `skills/meta/skill-tester`
@@ -170,14 +170,14 @@ bash scripts/install.sh skills/examples/get-weather ./.agents/skills
 ℹ Discovering skills installation directory...
 ⚠ Found empty skills directory: ./.agents/skills
 ℹ Target directory: ./.agents/skills
-ℹ Found skill locally: /Users/user/agent-skills/worktrees/main/skills/meta/skill-creator
-ℹ Installing skill-creator from /Users/user/agent-skills/worktrees/main/skills/meta/skill-creator
+ℹ Found skill locally: /Users/user/dot-agents/worktrees/main/skills/meta/skill-creator
+ℹ Installing skill-creator from /Users/user/dot-agents/worktrees/main/skills/meta/skill-creator
 ✓ Installed skill: skill-creator → ./.agents/skills/skill-creator
 ```
 
 ### Example 2: Installing Multiple Skills
 
-**Scenario**: Installing several skills from the agent-skills repository
+**Scenario**: Installing several skills from the dot-agents repository
 
 **Steps**:
 
@@ -284,7 +284,7 @@ The skill is installed using this name, **not** the source directory name. This 
 
 ## Best Practices
 
-- **Use shorthand for agent-skills library**: Simplest and most reliable
+- **Use shorthand for dot-agents library**: Simplest and most reliable
 - **Verify after installation**: Check SKILL.md exists and is readable
 - **Use `.agents/skills/` for projects**: Agent-agnostic, future-proof
 - **Use `~/.agents/skills/` for global skills**: Available across all projects
@@ -336,7 +336,7 @@ SKILL.md must have valid YAML frontmatter with `name:` field.
 ## Dependencies
 
 - `bash` (version 4.0+)
-- `git` (for GitHub and agent-skills repository installations)
+- `git` (for GitHub and dot-agents repository installations)
 - `awk` (for YAML parsing)
 - `find` (for directory discovery)
 
@@ -360,7 +360,7 @@ Standard utilities available on macOS and Linux.
 
 ## Troubleshooting
 
-### Q: Script can't find agent-skills repository
+### Q: Script can't find dot-agents repository
 
 A: Install from GitHub URL or clone the repository locally first.
 
@@ -379,5 +379,5 @@ A: Check write permissions on target directory or use a different location.
 ## Resources
 
 - Installation script: `scripts/install.sh`
-- Agent Skills Repository: <https://github.com/tnez/agent-skills>
+- Agent Skills Repository: <https://github.com/tnez/dot-agents>
 - Agent Skills Specification: <https://github.com/anthropics/skills/blob/main/agent_skills_spec.md>
