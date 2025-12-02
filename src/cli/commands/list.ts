@@ -35,18 +35,30 @@ export const listCommand = new Command("list")
             console.log(chalk.white(`  ${workflow.name}`));
             console.log(chalk.dim(`    ${workflow.description}`));
 
+            // Always show triggers
+            const triggers: string[] = [];
+            if (workflow.on?.manual) {
+              triggers.push("manual");
+            }
+            if (workflow.on?.schedule && workflow.on.schedule.length > 0) {
+              const crons = workflow.on.schedule.map((s: { cron: string }) => s.cron);
+              triggers.push(...crons.map((c) => `cron(${c})`));
+            }
+            if (workflow.on?.file_change) {
+              triggers.push("file_change");
+            }
+            if (workflow.on?.webhook) {
+              triggers.push("webhook");
+            }
+            if (triggers.length > 0) {
+              console.log(chalk.cyan(`    triggers: ${triggers.join(", ")}`));
+            } else {
+              console.log(chalk.yellow(`    triggers: none`));
+            }
+
             if (options.verbose) {
               console.log(chalk.dim(`    Path: ${relPath}`));
               console.log(chalk.dim(`    Persona: ${workflow.persona}`));
-
-              if (workflow.on?.schedule) {
-                const crons = workflow.on.schedule.map((s: { cron: string }) => s.cron).join(", ");
-                console.log(chalk.dim(`    Schedule: ${crons}`));
-              }
-
-              if (workflow.on?.manual) {
-                console.log(chalk.dim(`    Manual: enabled`));
-              }
 
               if (workflow.inputs && workflow.inputs.length > 0) {
                 const inputNames = workflow.inputs.map((i: { name: string }) => i.name).join(", ");
