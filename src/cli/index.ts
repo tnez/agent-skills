@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { Command } from "commander";
-import { runCommand, listCommand, showCommand, scheduleCommand, daemonCommand } from "./commands/index.js";
+import { initCommand, runCommand, listCommand, showCommand, scheduleCommand, daemonCommand } from "./commands/index.js";
 
 const program = new Command();
 
@@ -13,6 +13,7 @@ program
     program.help();
   });
 
+program.addCommand(initCommand);
 program.addCommand(runCommand);
 program.addCommand(listCommand);
 program.addCommand(showCommand);

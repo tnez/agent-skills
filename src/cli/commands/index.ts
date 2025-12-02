@@ -1,3 +1,4 @@
+export { initCommand } from "./init.js";
 export { runCommand } from "./run.js";
 export { listCommand } from "./list.js";
 export { showCommand } from "./show.js";

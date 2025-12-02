@@ -21,6 +21,119 @@ npm install -g dot-agents
 
 Requires Node.js 20+.
 
+## Project Setup
+
+The easiest way to set up dot-agents is with the `init` command:
+
+```bash
+# Fresh install - creates .agents/ with default persona and sample workflow
+dot-agents init
+
+# Or in a specific directory
+dot-agents init --dir /path/to/project
+```
+
+If you already have a `.agents/` directory, `init` will analyze it and guide you through migration.
+
+### Fresh Install
+
+Running `dot-agents init` in a directory without `.agents/` will:
+
+1. Create the directory structure (`.agents/personas/`, `.agents/workflows/`, etc.)
+2. Create a default `claude` persona
+3. Create a sample `hello-world` workflow
+
+You can also set up manually:
+
+```bash
+mkdir -p .agents/personas/claude .agents/workflows/hello
+```
+
+**Required persona fields:**
+
+```yaml
+---
+name: my-persona # Required: unique identifier
+cmd: "claude --print" # Required for root personas (can be inherited)
+description: "..." # Optional but recommended
+---
+```
+
+**Required workflow fields:**
+
+```yaml
+---
+name: my-workflow # Required: unique identifier
+description: "..." # Required: human-readable description
+persona: my-persona # Required: must match a persona name/path
+---
+```
+
+See [Quick Start](#quick-start) for a complete example.
+
+### Migrating Existing `.agents/` Directory
+
+If you have an existing `.agents/` directory with skills or workflows:
+
+```bash
+dot-agents init
+```
+
+The init command will:
+
+1. Analyze your existing structure
+2. Create a `personas/` directory with a default persona if missing
+3. Report which workflows need frontmatter updates
+
+**Workflow migration changes:**
+
+| Old Field      | New Field         | Notes                                  |
+| -------------- | ----------------- | -------------------------------------- |
+| `goal:`        | `description:`    | Rename the field                       |
+| (missing)      | `persona: claude` | Add reference to your persona          |
+| `skills_used:` | (move to persona) | Skills belong in persona, not workflow |
+
+Before:
+
+```yaml
+---
+name: my-workflow
+goal: Do something useful
+skills_used:
+  - osx/calendar
+  - productivity/query-todos
+---
+```
+
+After:
+
+```yaml
+---
+name: my-workflow
+description: Do something useful
+persona: claude
+on:
+  manual: true
+---
+```
+
+**Verify after migration:**
+
+```bash
+dot-agents list personas
+dot-agents list workflows
+dot-agents run my-workflow --dry-run
+```
+
+### Directory Discovery
+
+dot-agents searches for `.agents/` in these locations (in order):
+
+1. Current directory and ancestors (walks up the tree)
+2. Home directory (`~/.agents/`)
+
+This means you can run `dot-agents` from any subdirectory of a project.
+
 ## Quick Start
 
 ### 1. Create a `.agents` directory
@@ -140,6 +253,7 @@ Workflows support variable expansion in the task body:
 dot-agents [command]
 
 Commands:
+  init                     Initialize or migrate a .agents directory
   run <workflow>           Run a workflow
   list [workflows|personas] List resources
   show workflow <name>     Show workflow details
