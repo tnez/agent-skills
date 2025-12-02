@@ -347,32 +347,135 @@ Summary:
 
 ## Daemon
 
-The daemon runs scheduled workflows in the background.
+The daemon runs scheduled workflows in the background based on cron expressions.
+
+### Running the Daemon
 
 ```bash
-# Start the daemon
+# Start in foreground (Ctrl+C to stop)
+cd /path/to/project  # Must contain .agents/
 dot-agents daemon run
 
-# Check status
+# Custom port
+dot-agents daemon run -p 8080
+
+# Disable file watching
+dot-agents daemon run --no-watch
+```
+
+**Important:** The daemon must be run from a directory containing `.agents/` (or a subdirectory of one).
+
+### Managing the Daemon
+
+```bash
+# Check if daemon is running
 dot-agents daemon status
 
-# View scheduled jobs
+# View scheduled jobs and next run times
 dot-agents daemon jobs
 
 # Manually trigger a workflow
-dot-agents daemon trigger daily-standup
+dot-agents daemon trigger my-workflow
 
-# Reload workflows after changes
+# Reload workflows after editing files
 dot-agents daemon reload
 ```
 
-The daemon provides an HTTP API on port 3141 (configurable with `-p`):
+### HTTP API
+
+The daemon exposes an HTTP API on port 3141 (configurable with `-p`):
 
 - `GET /health` - Health check
 - `GET /status` - Daemon status and uptime
 - `GET /jobs` - List scheduled jobs
 - `POST /trigger/:workflow` - Trigger a workflow
 - `POST /reload` - Reload workflows from disk
+
+### Deploying on macOS (launchd)
+
+For an always-on Mac server, use launchd to keep the daemon running:
+
+1. Create a plist file at `~/Library/LaunchAgents/com.dot-agents.daemon.plist`:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.dot-agents.daemon</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/local/bin/npx</string>
+        <string>dot-agents</string>
+        <string>daemon</string>
+        <string>run</string>
+    </array>
+    <key>WorkingDirectory</key>
+    <string>/Users/YOUR_USERNAME/Documents</string>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>StandardOutPath</key>
+    <string>/tmp/dot-agents.out.log</string>
+    <key>StandardErrorPath</key>
+    <string>/tmp/dot-agents.err.log</string>
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/usr/local/bin:/usr/bin:/bin</string>
+    </dict>
+</dict>
+</plist>
+```
+
+2. Update the `WorkingDirectory` to point to your `.agents/` location.
+
+3. Load and start the daemon:
+
+```bash
+# Load the service
+launchctl load ~/Library/LaunchAgents/com.dot-agents.daemon.plist
+
+# Check status
+launchctl list | grep dot-agents
+
+# View logs
+tail -f /tmp/dot-agents.out.log
+
+# Stop and unload
+launchctl unload ~/Library/LaunchAgents/com.dot-agents.daemon.plist
+```
+
+### Workflow Schedule Format
+
+For workflows to be scheduled, they need `on.schedule` with cron expressions:
+
+```yaml
+---
+name: daily-report
+description: Generate daily report
+persona: claude
+on:
+  schedule:
+    - cron: "0 9 * * *" # 9:00 AM daily
+    - cron: "0 17 * * 1-5" # 5:00 PM weekdays
+  manual: true # Also allow manual triggers
+---
+```
+
+Common cron patterns:
+
+| Pattern       | Description         |
+| ------------- | ------------------- |
+| `0 9 * * *`   | Daily at 9:00 AM    |
+| `30 6 * * *`  | Daily at 6:30 AM    |
+| `0 */3 * * *` | Every 3 hours       |
+| `0 9 * * 1-5` | Weekdays at 9:00 AM |
+| `0 0 1 * *`   | First of each month |
+
+Use `dot-agents check` to validate your cron expressions.
 
 ## Directory Structure
 
