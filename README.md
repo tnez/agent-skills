@@ -15,6 +15,15 @@ dot-agents lets you define **personas** (agent configurations) and **workflows**
 
 ## Installation
 
+No installation required - use `npx` to run directly:
+
+```bash
+npx dot-agents init
+npx dot-agents run my-workflow
+```
+
+Or install globally:
+
 ```bash
 npm install -g dot-agents
 ```
@@ -27,10 +36,10 @@ The easiest way to set up dot-agents is with the `init` command:
 
 ```bash
 # Fresh install - creates .agents/ with default persona and sample workflow
-dot-agents init
+npx dot-agents init
 
 # Or in a specific directory
-dot-agents init --dir /path/to/project
+npx dot-agents init --dir /path/to/project
 ```
 
 If you already have a `.agents/` directory, `init` will analyze it and guide you through migration.
