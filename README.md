@@ -212,7 +212,7 @@ The daemon provides an HTTP API on port 3141 (configurable with `-p`):
 
 ## Directory Structure
 
-```
+```text
 .agents/
 ├── personas/           # Agent configurations
 │   └── claude/

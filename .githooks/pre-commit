@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -e
+
+echo "Running pre-commit checks..."
+
+# Run TypeScript build
+echo "Building TypeScript..."
+npm run build
+
+# Run typecheck
+echo "Running typecheck..."
+npm run typecheck
+
+# Run lint on staged files
+echo "Linting staged files..."
+just lint-staged
+
+echo "All checks passed!"

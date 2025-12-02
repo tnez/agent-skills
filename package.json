@@ -23,6 +23,7 @@
     "dev": "tsc --watch",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist *.tsbuildinfo",
+    "prepare": "git config core.hooksPath .githooks || true",
     "prepublishOnly": "npm run clean && npm run build"
   },
   "files": [
