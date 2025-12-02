@@ -1,237 +1,269 @@
-# .agents Directory
+# dot-agents
 
-A curated collection of agent capabilities including skills, workflows, and tooling for building agentic projects.
+A framework for building and running agentic workflows with personas and scheduled execution.
 
-## What is the .agents Directory?
+## What is dot-agents?
 
-The `.agents/` directory is a standardized location for agent-related resources in your project. It provides a consistent structure for:
+dot-agents lets you define **personas** (agent configurations) and **workflows** (tasks for agents to execute), then run them on-demand or on a schedule. It's designed to work with any agent CLI (Claude Code, local LLMs, etc.).
 
-- **Skills** - Focused, reusable capabilities (convert markdown to PDF, validate YAML, etc.)
-- **Workflows** - Multi-step orchestrations that compose skills and tools
-- **Meta-tooling** - Tools for creating, testing, and managing agent capabilities
+**Key features:**
 
-Think of it as your project's "agent workspace" - everything your AI agent needs to work effectively on your codebase.
-
-## Directory Structure
-
-When consumed, this repository installs to your project's `.agents/` directory:
-
-```text
-.agents/
-├── skills/           # Focused, reusable capabilities
-│   ├── meta/         # Tools for skill management
-│   ├── examples/     # Example implementations
-│   └── documents/    # Document processing
-└── workflows/        # Multi-step orchestrations
-    └── examples/     # Example workflows
-```
+- **Personas** with cascading inheritance - define base configurations and extend them
+- **Workflows** with triggers - run on-demand, on cron schedules, or via webhooks
+- **Daemon** for background execution - scheduled workflows run automatically
+- **Agent-agnostic** - works with any CLI that accepts prompts via stdin
 
 ## Installation
 
-### The Agentic Way (Recommended)
-
-This repository is designed for **agentic installation** - your AI agent can install resources directly without scripts or package managers.
-
-Simply tell your agent:
-
-```text
-"Install find-local-events skill from tnez/dot-agents"
-"Install skills from tnez/dot-agents"
+```bash
+npm install -g dot-agents
 ```
 
-Your agent will:
-
-1. Fetch the files from GitHub
-2. Detect your `.agents/` directory (or ask where to install)
-3. Map repository structure to installation location:
-   - `skills/` → `.agents/skills/`
-   - `workflows/` → `.agents/workflows/`
-4. Verify installation
-
-**No npm, pip, or bash scripts required** - your agent handles everything using its built-in capabilities.
-
-### Discovery & Updates
-
-Browse available resources:
-
-```text
-"Browse skills in tnez/dot-agents"
-"What workflows are available?"
-"Show me document-related skills"
-```
-
-Check for updates:
-
-```text
-"Check for updates to my installed skills"
-"Update skill-installer"
-```
-
-See [CATALOG.md](CATALOG.md) for the complete list.
-
-### How It Works
-
-Your agent uses meta-skills from this repository:
-
-- **skill-installer**: Fetches and installs skills from GitHub
-- **skill-browser**: Discovers available skills and workflows
-
-Both are pure agentic - they teach your agent HOW to install, rather than providing scripts to run.
-
-### Installation Locations
-
-Resources install to these locations (in priority order):
-
-1. `.agents/` - Project-level, agent-agnostic (preferred)
-2. `.claude/` - Project-level, Claude-specific
-3. `~/.agents/` - Global, agent-agnostic
-4. `~/.claude/` - Global, Claude-specific
-
-Your agent will auto-detect or ask where to install.
-
-## Repository Development Structure
-
-```text
-worktrees/main/
-├── CATALOG.md             # Machine-readable catalog
-├── skills/                # → .agents/skills/ when consumed
-│   ├── meta/              # Skill management tools
-│   │   ├── skill-installer/
-│   │   ├── skill-browser/
-│   │   ├── skill-creator/
-│   │   ├── skill-tester/
-│   │   └── skill-evaluator/
-│   ├── examples/          # Example implementations
-│   │   ├── find-local-events/
-│   │   ├── get-weather/
-│   │   └── simple-task/
-│   └── documents/         # Document processing
-│       ├── image-review-pdf/
-│       └── markdown-to-pdf/
-└── workflows/             # → .agents/workflows/ when consumed
-    ├── README.md
-    └── examples/
-```
+Requires Node.js 20+.
 
 ## Quick Start
 
-### For Agents
+### 1. Create a `.agents` directory
 
-Resources are loaded automatically when relevant to your task. Each provides:
+```bash
+mkdir -p .agents/personas/claude .agents/workflows/hello
+```
 
-- Clear instructions for when and how to use it
-- Templates and examples
-- Validation and testing tools
+### 2. Define a persona
 
-### For Humans
-
-1. **Browse skills**: Explore `skills/` directory
-2. **Browse workflows**: Explore `workflows/` directory
-3. **Use meta-skills**: Leverage skill-creator, skill-tester, skill-evaluator
-4. **Create custom resources**: Follow specifications in each directory's README
-5. **See development workflows**: Check WORKFLOWS.md for development patterns
-
-## Skills
-
-Skills are focused, reusable capabilities that agents load dynamically. Each skill is a self-contained directory with:
-
-- `SKILL.md` - Required markdown file with YAML frontmatter and instructions
-- `CONTEXT.md` - Optional user/project-specific context and customizations
-- Optional supporting files (scripts, templates, assets, references)
-
-**Format**:
+Create `.agents/personas/claude/PERSONA.md`:
 
 ```markdown
 ---
-name: skill-name
-description: What the skill does and when to use it
-license: MIT
+name: claude
+description: Base Claude persona
+cmd:
+  - "claude --print"
+  - "claude -p"
+env:
+  CLAUDE_MODEL: sonnet
 ---
 
-# Skill Instructions
-
-Imperative instructions for the agent...
+You are a helpful assistant. Execute tasks thoroughly and report results clearly.
 ```
 
-**CONTEXT.md Pattern**: Co-locate a `CONTEXT.md` file with any `SKILL.md` to inject user or project-specific context. The skill remains general and reusable while `CONTEXT.md` provides customization. This file is preserved during skill updates.
+### 3. Create a workflow
 
-See [Agent Skills Specification](https://github.com/anthropics/skills/blob/main/agent_skills_spec.md) for details.
+Create `.agents/workflows/hello/WORKFLOW.md`:
 
-## Workflows
+```markdown
+---
+name: hello-world
+description: A simple hello world workflow
+persona: claude
+on:
+  manual: true
+---
 
-Workflows are multi-step orchestrations that compose skills, tools, and agent behaviors. They handle complex tasks requiring:
+Say hello and tell me today's date.
+```
 
-- Multiple phases or steps
-- Decision making and conditionals
-- Coordination of multiple skills
-- Standardized procedures
+### 4. Run it
 
-See `workflows/README.md` for details on creating workflows.
+```bash
+dot-agents run hello-world
+```
 
-## Meta-Skills
+## Core Concepts
 
-### skill-installer ⭐
+### Personas
 
-Pure agentic skill installation from GitHub repositories. Features:
+Personas define **how** an agent behaves. They specify the command to run, environment variables, available skills, and a system prompt.
 
-- Zero dependencies (uses WebFetch, Bash, Write, Glob)
-- Smart semantic merging for updates
-- CONTEXT.md preservation for user customizations
-- Auto-detects installation location
+```yaml
+---
+name: productivity-assistant
+description: Focused assistant for productivity tasks
+cmd: "claude --print"
+env:
+  CLAUDE_MODEL: sonnet
+skills:
+  - "productivity/**"
+  - "!productivity/experimental/*"
+---
+System prompt goes here in the markdown body...
+```
 
-**New paradigm**: Your agent installs skills, not scripts.
+**Persona inheritance:** Personas cascade through directories. A persona at `personas/claude/autonomous/productivity/` inherits from `personas/claude/autonomous/` which inherits from `personas/claude/`.
 
-### skill-browser ⭐
+- Scalar fields (name, description, cmd) - child overrides parent
+- Objects (env) - deep merged
+- Arrays (skills) - merged with `!` prefix for removal
 
-Discover and browse available skills. Features:
+### Workflows
 
-- Reads CATALOG.md to show available resources
-- Compares with local installation
-- Identifies updates and new additions
-- Filters by category or relevance
+Workflows define **what** an agent should do. They reference a persona and contain the task in the markdown body.
 
-**Usage**: "Browse skills in tnez/dot-agents" or "What's new?"
+```yaml
+---
+name: daily-standup
+description: Generate standup notes from git activity
+persona: claude/autonomous
+on:
+  schedule:
+    - cron: "0 9 * * 1-5"
+  manual: true
+inputs:
+  - name: days
+    type: number
+    default: 1
+    description: Days of history to analyze
+---
 
-### skill-creator
+Analyze git commits from the last ${days} day(s) and generate standup notes.
+Focus on: what was accomplished, what's in progress, any blockers.
+```
 
-Scaffold new skills with proper structure and validation. Generates:
+**Triggers:**
 
-- SKILL.md with valid YAML frontmatter
-- Directory structure (scripts, templates, assets)
-- Validation checks for spec compliance
+- `manual: true` - Can be run on-demand
+- `schedule` - Cron-based scheduling (requires daemon)
+- Future: `file_change`, `webhook`, `git`
 
-### skill-tester
+### Variable Expansion
 
-Validate skills against the specification. Tests:
+Workflows support variable expansion in the task body:
 
-- YAML frontmatter correctness
-- File references and structure
-- Common issues and anti-patterns
+- `${VAR}` - Environment variables and inputs
+- `${DATE}`, `${TIME}`, `${DATETIME}` - Current date/time
+- `${RUN_ID}` - Unique execution identifier
+- `{{#if var}}...{{/if}}` - Conditional blocks
 
-### skill-evaluator
+## CLI Reference
 
-Assess skill quality using rubric-based evaluation. Evaluates:
+```bash
+dot-agents [command]
 
-- Clarity and actionability
-- Completeness and focus
-- Examples and documentation quality
+Commands:
+  run <workflow>           Run a workflow
+  list [workflows|personas] List resources
+  show workflow <name>     Show workflow details
+  show persona <name>      Show resolved persona (with inheritance)
+  schedule list            List scheduled workflows
+  daemon run               Run the scheduler daemon
+  daemon status            Check daemon status
+  daemon jobs              List scheduled jobs
+  daemon trigger <name>    Manually trigger a workflow
+
+Aliases:
+  workflows                List all workflows
+  personas                 List all personas
+```
+
+### Running Workflows
+
+```bash
+# Run a workflow
+dot-agents run daily-standup
+
+# With input overrides
+dot-agents run daily-standup -i days=3
+
+# Dry run (show prompt without executing)
+dot-agents run daily-standup --dry-run
+
+# Override persona
+dot-agents run daily-standup -p claude/autonomous
+```
+
+### Viewing Details
+
+```bash
+# Show resolved persona with full inheritance chain
+dot-agents show persona claude/autonomous/productivity
+
+# Show workflow with resolved prompt
+dot-agents show workflow daily-standup --prompt
+```
+
+## Daemon
+
+The daemon runs scheduled workflows in the background.
+
+```bash
+# Start the daemon
+dot-agents daemon run
+
+# Check status
+dot-agents daemon status
+
+# View scheduled jobs
+dot-agents daemon jobs
+
+# Manually trigger a workflow
+dot-agents daemon trigger daily-standup
+
+# Reload workflows after changes
+dot-agents daemon reload
+```
+
+The daemon provides an HTTP API on port 3141 (configurable with `-p`):
+
+- `GET /health` - Health check
+- `GET /status` - Daemon status and uptime
+- `GET /jobs` - List scheduled jobs
+- `POST /trigger/:workflow` - Trigger a workflow
+- `POST /reload` - Reload workflows from disk
+
+## Directory Structure
+
+```
+.agents/
+├── personas/           # Agent configurations
+│   └── claude/
+│       ├── PERSONA.md  # Base Claude persona
+│       └── autonomous/
+│           ├── PERSONA.md  # Inherits from claude
+│           └── productivity/
+│               └── PERSONA.md  # Inherits from autonomous
+├── workflows/          # Task definitions
+│   └── daily-standup/
+│       └── WORKFLOW.md
+├── skills/             # Reusable capabilities (optional)
+└── sessions/           # Execution logs
+```
+
+## Skills
+
+dot-agents also supports skills - focused, reusable capabilities that agents can load. Skills follow the [Anthropic Skills Specification](https://github.com/anthropics/skills/blob/main/agent_skills_spec.md).
+
+Skills are referenced in personas via glob patterns:
+
+```yaml
+skills:
+  - "documents/**"
+  - "productivity/*"
+  - "!experimental/**"
+```
+
+See the `skills/` directory for examples.
+
+## Development
+
+```bash
+# Clone and install
+git clone https://github.com/tnez/dot-agents.git
+cd dot-agents
+npm install
+
+# Build
+npm run build
+
+# Run CLI locally
+just cli list workflows
+
+# Run linters
+just lint
+```
 
 ## Contributing
 
-When creating new skills or workflows:
-
-1. Use `skill-creator` for skills or follow `workflows/README.md` for workflows
-2. Test with `skill-tester` to ensure spec compliance
-3. Evaluate with `skill-evaluator` for quality assurance
-4. Follow the test → evaluate → refine cycle
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
-
-## Resources
-
-- [Agent Skills Specification](https://github.com/anthropics/skills/blob/main/agent_skills_spec.md)
-- [Anthropics Skills Repository](https://github.com/anthropics/skills)
-- [Development Workflows](DEVELOPMENT.md)
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## License
 
