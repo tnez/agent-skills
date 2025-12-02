@@ -1,10 +1,15 @@
 import { Command } from "commander";
 import chalk from "chalk";
-import { mkdir, writeFile, readdir, stat } from "node:fs/promises";
-import { join } from "node:path";
+import { mkdir, writeFile, stat } from "node:fs/promises";
+import { join, relative } from "node:path";
 import { createInterface } from "node:readline";
 import { findAgentsDir } from "../../lib/config.js";
-import { listWorkflows, loadWorkflow } from "../../lib/workflow.js";
+import {
+  validateAllWorkflows,
+  validateAllPersonas,
+  ValidationResult,
+  ValidationIssue,
+} from "../../lib/validation/index.js";
 
 const AGENTS_DIR = ".agents";
 const PERSONAS_DIR = "personas";
@@ -86,8 +91,8 @@ interface MigrationStatus {
   hasWorkflows: boolean;
   hasSkills: boolean;
   hasSessions: boolean;
-  workflowsNeedingMigration: string[];
-  validWorkflows: string[];
+  personaResults: ValidationResult[];
+  workflowResults: ValidationResult[];
 }
 
 async function analyzeMigration(agentsDir: string): Promise<MigrationStatus> {
@@ -101,46 +106,43 @@ async function analyzeMigration(agentsDir: string): Promise<MigrationStatus> {
     hasWorkflows: await dirExists(workflowsDir),
     hasSkills: await dirExists(skillsDir),
     hasSessions: await dirExists(sessionsDir),
-    workflowsNeedingMigration: [],
-    validWorkflows: [],
+    personaResults: [],
+    workflowResults: [],
   };
 
-  // Check personas directory has at least one persona
+  // Validate personas
   if (status.hasPersonas) {
-    try {
-      const entries = await readdir(personasDir);
-      const hasPersonaFiles = await Promise.all(
-        entries.map(async (entry) => {
-          const personaFile = join(personasDir, entry, "PERSONA.md");
-          return fileExists(personaFile);
-        })
-      );
-      status.hasPersonas = hasPersonaFiles.some(Boolean);
-    } catch {
-      status.hasPersonas = false;
-    }
+    status.personaResults = await validateAllPersonas(personasDir);
+    // Update hasPersonas based on whether any valid personas exist
+    status.hasPersonas = status.personaResults.some((r) => r.valid);
   }
 
-  // Scan workflows for migration needs
+  // Validate workflows
   if (status.hasWorkflows) {
-    try {
-      const workflowPaths = await listWorkflows(workflowsDir);
-
-      for (const workflowPath of workflowPaths) {
-        try {
-          await loadWorkflow(workflowPath);
-          status.validWorkflows.push(workflowPath);
-        } catch {
-          // Workflow exists but doesn't meet requirements
-          status.workflowsNeedingMigration.push(workflowPath);
-        }
-      }
-    } catch {
-      // Ignore errors
-    }
+    status.workflowResults = await validateAllWorkflows(
+      workflowsDir,
+      status.hasPersonas ? personasDir : undefined
+    );
   }
 
   return status;
+}
+
+/**
+ * Format a validation issue for display
+ */
+function formatIssue(issue: ValidationIssue): string {
+  const icon = issue.severity === "error" ? chalk.red("✗") : chalk.yellow("⚠");
+
+  let line = `      ${icon} ${issue.message}`;
+  if (issue.path && issue.path !== "file" && issue.path !== "frontmatter") {
+    line += chalk.dim(` [${issue.path}]`);
+  }
+  if (issue.suggestion) {
+    line += `\n        ${chalk.dim("→")} ${chalk.cyan(issue.suggestion)}`;
+  }
+
+  return line;
 }
 
 async function freshInstall(targetDir: string): Promise<void> {
@@ -195,6 +197,7 @@ async function migrate(agentsDir: string): Promise<void> {
   console.log(chalk.blue("\nAnalyzing existing .agents directory...\n"));
 
   const status = await analyzeMigration(agentsDir);
+  const workflowsDir = join(agentsDir, WORKFLOWS_DIR);
 
   // Report current state
   console.log("Current structure:");
@@ -211,17 +214,24 @@ async function migrate(agentsDir: string): Promise<void> {
     `  ${status.hasSessions ? chalk.green("✓") : chalk.dim("○")} sessions/`
   );
 
-  // Report workflow status
-  if (status.validWorkflows.length > 0) {
+  // Count valid vs invalid workflows
+  const validWorkflows = status.workflowResults.filter((r) => r.valid);
+  const invalidWorkflows = status.workflowResults.filter((r) => !r.valid);
+  const workflowsWithWarnings = status.workflowResults.filter(
+    (r) => r.valid && r.issues.length > 0
+  );
+
+  if (validWorkflows.length > 0) {
+    console.log(chalk.green(`\n  ${validWorkflows.length} valid workflow(s)`));
+  }
+  if (workflowsWithWarnings.length > 0) {
     console.log(
-      chalk.green(`\n  ${status.validWorkflows.length} valid workflow(s)`)
+      chalk.yellow(`  ${workflowsWithWarnings.length} workflow(s) with warnings`)
     );
   }
-  if (status.workflowsNeedingMigration.length > 0) {
+  if (invalidWorkflows.length > 0) {
     console.log(
-      chalk.yellow(
-        `  ${status.workflowsNeedingMigration.length} workflow(s) need migration`
-      )
+      chalk.red(`  ${invalidWorkflows.length} workflow(s) with errors`)
     );
   }
 
@@ -230,7 +240,7 @@ async function migrate(agentsDir: string): Promise<void> {
   // Create personas directory if missing
   if (!status.hasPersonas) {
     needsAction = true;
-    console.log(chalk.yellow("\n⚠ No personas found."));
+    console.log(chalk.yellow("\n⚠ No valid personas found."));
 
     const createPersona = await confirm("Create default 'claude' persona?");
 
@@ -245,27 +255,38 @@ async function migrate(agentsDir: string): Promise<void> {
     }
   }
 
-  // Report workflow migration needs
-  if (status.workflowsNeedingMigration.length > 0) {
+  // Report workflow issues with detailed validation feedback
+  const workflowsWithIssues = status.workflowResults.filter(
+    (r) => r.issues.length > 0
+  );
+
+  if (workflowsWithIssues.length > 0) {
     needsAction = true;
-    console.log(chalk.yellow("\n⚠ Workflows requiring manual migration:\n"));
+    console.log(chalk.yellow("\n⚠ Workflow issues found:\n"));
 
-    for (const workflowPath of status.workflowsNeedingMigration) {
-      console.log(chalk.dim(`  - ${workflowPath}/WORKFLOW.md`));
+    for (const result of workflowsWithIssues) {
+      const relPath = relative(workflowsDir, result.path);
+      const displayName = result.name || relPath;
+      const hasErrors = result.issues.some((i) => i.severity === "error");
+
+      if (hasErrors) {
+        console.log(`  ${chalk.red("✗")} ${displayName}`);
+      } else {
+        console.log(`  ${chalk.yellow("○")} ${displayName}`);
+      }
+
+      for (const issue of result.issues) {
+        console.log(formatIssue(issue));
+      }
+      console.log();
     }
-
-    console.log(chalk.dim("\nRequired changes for each workflow:"));
-    console.log(chalk.dim("  1. Add 'description:' field (rename from 'goal:' if present)"));
-    console.log(chalk.dim("  2. Add 'persona: claude' field"));
-    console.log(chalk.dim("  3. Move 'skills_used:' to persona if present"));
   }
 
   if (!needsAction) {
     console.log(chalk.green("\n✓ Your .agents directory is already set up!"));
   } else {
-    console.log(chalk.blue("\nAfter making changes, verify with:"));
-    console.log(chalk.dim("  dot-agents list workflows"));
-    console.log(chalk.dim("  dot-agents list personas"));
+    console.log(chalk.blue("After making changes, verify with:"));
+    console.log(chalk.dim("  dot-agents check"));
   }
 }
 

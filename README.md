@@ -263,6 +263,7 @@ dot-agents [command]
 
 Commands:
   init                     Initialize or migrate a .agents directory
+  check [type]             Validate workflows and personas
   run <workflow>           Run a workflow
   list [workflows|personas] List resources
   show workflow <name>     Show workflow details
@@ -302,6 +303,46 @@ dot-agents show persona claude/autonomous/productivity
 
 # Show workflow with resolved prompt
 dot-agents show workflow daily-standup --prompt
+```
+
+### Validating Configuration
+
+The `check` command validates your workflows and personas, catching common issues like:
+
+- Missing required fields (`name`, `description`, `persona`)
+- Invalid trigger configurations (wrong `schedule` format)
+- Unknown fields (suggesting correct alternatives)
+- Invalid cron expressions
+- Missing persona references
+
+```bash
+# Check everything
+dot-agents check
+
+# Check only workflows
+dot-agents check workflows
+
+# Check only personas
+dot-agents check personas
+
+# JSON output (for CI/scripts)
+dot-agents check --json
+```
+
+Example output:
+
+```text
+Checking workflows...
+  ✓ hello-world
+  ○ daily-standup
+    ⚠ warning: Unknown field 'schedule' [schedule]
+      hint: Did you mean 'on.schedule'?
+  ✗ broken-workflow
+    ✗ error: Missing required 'persona' field
+      hint: Add: persona: claude
+
+Summary:
+  Workflows: 2/3 valid
 ```
 
 ## Daemon
