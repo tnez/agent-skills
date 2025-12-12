@@ -129,8 +129,15 @@ showCommand
       );
 
       console.log(chalk.white("\nCommands:"));
-      for (const cmd of persona.cmd) {
-        console.log(chalk.dim(`  - ${cmd}`));
+      console.log(chalk.dim("  Headless:"));
+      for (const cmd of persona.commands.headless) {
+        console.log(chalk.dim(`    - ${cmd}`));
+      }
+      if (persona.commands.interactive) {
+        console.log(chalk.dim("  Interactive:"));
+        for (const cmd of persona.commands.interactive) {
+          console.log(chalk.dim(`    - ${cmd}`));
+        }
       }
 
       if (Object.keys(persona.env).length > 0) {

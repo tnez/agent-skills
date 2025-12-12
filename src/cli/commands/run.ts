@@ -17,6 +17,8 @@ export const runCommand = new Command("run")
   .option("-t, --timeout <duration>", "Timeout (e.g., 5m, 1h)")
   .option("-w, --working-dir <path>", "Working directory")
   .option("-v, --verbose", "Verbose output")
+  .option("--interactive", "Run in interactive mode (requires TTY)")
+  .option("--batch", "Force headless/batch mode (no TTY interaction)")
   .action(async (name, options) => {
     try {
       const config = await requireConfig();
@@ -76,6 +78,28 @@ export const runCommand = new Command("run")
         );
       }
 
+      // Determine execution mode
+      let interactive = false;
+      if (options.interactive && options.batch) {
+        console.error(chalk.red("Cannot specify both --interactive and --batch"));
+        process.exit(1);
+      } else if (options.interactive) {
+        if (!persona.commands.interactive) {
+          console.error(chalk.red(`Persona '${persona.name}' does not support interactive mode`));
+          process.exit(1);
+        }
+        interactive = true;
+      } else if (options.batch) {
+        interactive = false;
+      } else {
+        // Auto-detect: use interactive if TTY available and persona supports it
+        interactive = process.stdout.isTTY && !!persona.commands.interactive;
+      }
+
+      if (options.verbose) {
+        console.log(chalk.dim(`Execution mode: ${interactive ? "interactive" : "headless"}`));
+      }
+
       // Run workflow
       console.log(
         chalk.blue(`Running workflow: ${workflow.name}`)
@@ -90,6 +114,7 @@ export const runCommand = new Command("run")
         workingDir: options.workingDir,
         timeout: options.timeout,
         dryRun: options.dryRun,
+        interactive,
       });
 
       if (options.dryRun) {

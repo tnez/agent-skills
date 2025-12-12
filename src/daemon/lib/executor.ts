@@ -6,6 +6,7 @@ import {
   type ResolvedPersona,
   type ExecutionResult,
   type DotAgentsConfig,
+  type ResolvedCommands,
   resolvePersona,
   createExecutionContext,
   processTemplate,
@@ -69,6 +70,16 @@ function buildPrompt(
 }
 
 /**
+ * Options for workflow execution
+ */
+export interface ExecutionOptions {
+  /** Input overrides */
+  inputs?: Record<string, unknown>;
+  /** Run in interactive mode (requires persona to support it) */
+  interactive?: boolean;
+}
+
+/**
  * Executor for running workflows
  */
 export class Executor {
@@ -79,8 +90,9 @@ export class Executor {
    */
   async run(
     workflow: Workflow,
-    inputOverrides?: Record<string, unknown>
+    options: ExecutionOptions = {}
   ): Promise<ExecutionResult> {
+    const { inputs: inputOverrides, interactive = false } = options;
     const startedAt = new Date();
 
     // Resolve persona
@@ -142,11 +154,31 @@ export class Executor {
       ? parseDuration(workflow.timeout)
       : 10 * 60 * 1000;
 
+    // Select commands based on execution mode
+    const cmds = interactive
+      ? persona.commands.interactive
+      : persona.commands.headless;
+
+    if (!cmds) {
+      const endedAt = new Date();
+      return {
+        success: false,
+        exitCode: 1,
+        stdout: "",
+        stderr: `Persona '${persona.name}' does not support ${interactive ? "interactive" : "headless"} mode`,
+        duration: endedAt.getTime() - startedAt.getTime(),
+        runId: context.RUN_ID,
+        startedAt,
+        endedAt,
+        error: `Unsupported execution mode: ${interactive ? "interactive" : "headless"}`,
+      };
+    }
+
     // Try each command
     let lastError: Error | null = null;
     let result: ExecutionResult | null = null;
 
-    for (const cmd of persona.cmd) {
+    for (const cmd of cmds) {
       try {
         const expandedCmd = expandVariables(
           cmd,

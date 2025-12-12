@@ -5,9 +5,63 @@ import type {
   Persona,
   PersonaFrontmatter,
   ResolvedPersona,
+  ResolvedCommands,
+  CommandSpec,
+  CommandModes,
 } from "./types/persona.js";
 
 const PERSONA_FILENAME = "PERSONA.md";
+
+/**
+ * Normalize a CommandSpec to string array
+ */
+function normalizeCommandSpec(cmd: CommandSpec | undefined): string[] | undefined {
+  if (cmd === undefined) return undefined;
+  if (typeof cmd === "string") return [cmd];
+  return cmd;
+}
+
+/**
+ * Check if cmd is in object/modes format (vs legacy array format)
+ */
+function isCommandModes(cmd: CommandSpec | CommandModes | undefined): cmd is CommandModes {
+  return (
+    cmd !== undefined &&
+    typeof cmd === "object" &&
+    !Array.isArray(cmd)
+  );
+}
+
+/**
+ * Resolve cmd field to ResolvedCommands structure
+ */
+export function resolveCommands(cmd: CommandSpec | CommandModes | undefined): ResolvedCommands {
+  if (!cmd) {
+    throw new Error("Persona must specify cmd");
+  }
+
+  if (isCommandModes(cmd)) {
+    // Object format: { headless, interactive }
+    const headless = normalizeCommandSpec(cmd.headless);
+    const interactive = normalizeCommandSpec(cmd.interactive);
+
+    if (!headless && !interactive) {
+      throw new Error("Persona cmd must specify at least headless or interactive");
+    }
+
+    return {
+      headless: headless ?? interactive!,
+      interactive,
+    };
+  }
+
+  // Legacy format: array/string = headless only
+  const headless = normalizeCommandSpec(cmd);
+  return {
+    headless: headless!,
+    interactive: undefined,
+  };
+}
 
 /**
  * Load a single persona file
@@ -184,13 +238,13 @@ export async function resolvePersona(
     throw new Error(`No persona found at path: ${personaPath}`);
   }
 
-  // Normalize cmd to array
-  const cmd = Array.isArray(resolved.cmd) ? resolved.cmd : [resolved.cmd];
+  // Resolve commands to normalized structure
+  const commands = resolveCommands(resolved.cmd);
 
   return {
     name: resolved.name,
     description: resolved.description,
-    cmd,
+    commands,
     env: resolved.env ?? {},
     skills: resolved.skills ?? [],
     prompt: resolved.prompt,

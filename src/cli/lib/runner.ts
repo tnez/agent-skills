@@ -51,6 +51,8 @@ export interface RunOptions {
   timeout?: string;
   /** Dry run - don't actually execute */
   dryRun?: boolean;
+  /** Run in interactive mode (persona must support it) */
+  interactive?: boolean;
 }
 
 /**
@@ -155,11 +157,32 @@ export async function runWorkflow(
     };
   }
 
+  // Select commands based on execution mode
+  const interactive = options.interactive ?? false;
+  const cmds = interactive
+    ? persona.commands.interactive
+    : persona.commands.headless;
+
+  if (!cmds) {
+    const endedAt = new Date();
+    return {
+      success: false,
+      exitCode: 1,
+      stdout: "",
+      stderr: `Persona '${persona.name}' does not support ${interactive ? "interactive" : "headless"} mode`,
+      duration: endedAt.getTime() - startedAt.getTime(),
+      runId: context.RUN_ID,
+      startedAt,
+      endedAt,
+      error: `Unsupported execution mode: ${interactive ? "interactive" : "headless"}`,
+    };
+  }
+
   // Try each command in order
   let lastError: Error | null = null;
   let result: ExecutionResult | null = null;
 
-  for (const cmd of persona.cmd) {
+  for (const cmd of cmds) {
     try {
       const expandedCmd = expandVariables(cmd, context as Record<string, string>, env);
       const [command, ...args] = expandedCmd.split(/\s+/);
