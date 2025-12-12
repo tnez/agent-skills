@@ -11,6 +11,7 @@ const PERSONAS_DIR = "personas";
 const WORKFLOWS_DIR = "workflows";
 const SKILLS_DIR = "skills";
 const SESSIONS_DIR = "sessions";
+const CHANNELS_DIR = "channels";
 
 /**
  * Check if a directory exists
@@ -76,6 +77,7 @@ export async function getConfig(
     workflowsDir: join(agentsDir, WORKFLOWS_DIR),
     skillsDir: join(agentsDir, SKILLS_DIR),
     sessionsDir: join(agentsDir, SESSIONS_DIR),
+    channelsDir: join(agentsDir, CHANNELS_DIR),
   };
 }
 

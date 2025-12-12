@@ -1,6 +1,7 @@
 export * from "./persona.js";
 export * from "./workflow.js";
 export * from "./triggers.js";
+export * from "./channel.js";
 
 /**
  * Execution context for variable expansion
@@ -68,4 +69,6 @@ export interface DotAgentsConfig {
   skillsDir: string;
   /** Directory for session logs and runtime state */
   sessionsDir: string;
+  /** Directory for channels */
+  channelsDir: string;
 }
