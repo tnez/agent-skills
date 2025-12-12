@@ -2,6 +2,18 @@
 
 All notable changes to dot-agents will be documented in this file.
 
+## [0.4.1] - 2025-12-12
+
+### Added
+
+- **Interactive/Headless Command Modes** - Personas can define separate commands for different execution contexts
+  - `cmd` as array: legacy headless-only behavior
+  - `cmd` as object: `{ headless: [...], interactive: [...] }` for mode-specific commands
+  - TTY auto-detection: automatically uses interactive mode when TTY available and persona supports it
+  - `--interactive` flag: force interactive mode
+  - `--batch` flag: force headless mode
+  - `dot-agents show persona` displays both command modes
+
 ## [0.4.0] - 2025-12-12
 
 ### Added
