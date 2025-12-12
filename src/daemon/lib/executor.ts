@@ -108,6 +108,7 @@ export class Executor {
       ...process.env,
       ...persona.env,
       ...workflow.env,
+      DOT_AGENTS_PERSONA: persona.name,
     } as Record<string, string>;
 
     for (const [key, value] of Object.entries(env)) {
