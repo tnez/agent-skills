@@ -93,6 +93,10 @@ check: lint
     done
     @echo "All checks passed!"
 
+# Run channel integration tests
+test-channels:
+    ./scripts/test-channels.sh
+
 # Clean up generated files
 clean:
     find . -type f -name '*.pyc' -delete
